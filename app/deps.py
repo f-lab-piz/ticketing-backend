@@ -1,5 +1,4 @@
 import os
-import logging
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -7,8 +6,6 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
-
-logger = logging.getLogger(__name__)
 
 from .db import get_db
 from . import crud, schemas, models
@@ -36,10 +33,6 @@ def decode_access_token(token: str) -> schemas.TokenData:
   )
   try:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    # 디버깅: payload 내용 확인
-    logger.info(f"JWT Payload: {payload}")
-    print(f"🔍 JWT Payload 전체 내용: {payload}")
-    print(f"🔑 Payload의 모든 키: {list(payload.keys())}")
     subject: Optional[str] = payload.get("sub")
     exp: Optional[int] = payload.get("exp")
     if subject is None:
